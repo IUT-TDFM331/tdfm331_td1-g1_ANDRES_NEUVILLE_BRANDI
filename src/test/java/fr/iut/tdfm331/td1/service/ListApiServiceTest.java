@@ -10,7 +10,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * Unit test file to test ListApiService class
@@ -74,10 +74,56 @@ public class ListApiServiceTest {
      * Test to check if a selected Meeting is correctly removed from list
      */
     @Test
-    public void removeMeetingWithSuccess() {
+    public void removeWithSuccess() {
         // Get first Meeting from list
         Meeting meetingToRemove = service.getListMeetings().get(0);
         service.getListMeetings().remove(meetingToRemove);
         Assert.assertFalse(service.getListMeetings().contains(meetingToRemove));
     }
+
+    /**
+     * Test to check if a selected Meeting is correctly removed from list
+     */
+    @Test
+    public void removeMeetingWithSuccess() {
+        // Get first Meeting from list
+        Meeting meetingToRemove = service.getListMeetings().get(0);
+        service.removeMeeting(meetingToRemove);
+        Assert.assertFalse(service.getListMeetings().contains(meetingToRemove));
+    }
+
+    @Test
+    public void findByObjectWithSuccess() throws MeetingNotFound{
+        Meeting meetingToFound = service.getListMeetings().get(0);
+        assertEquals(meetingToFound, service.findByObject(service.getListMeetings().get(0).getObjectMeeting()));
+
+    }
+
+    @Test
+    public void findByObjectWithFail(){
+        Meeting meetingToFound = service.getListMeetings().get(0);
+        try {
+            assertNotEquals(meetingToFound, service.findByObject("Réunion d'avancem"));
+        } catch (MeetingNotFound e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void findByNameWithSuccess() {
+        //create a list of employee
+        try {
+            Assert.assertEquals(service.findByName(service.getListEmployees().get(0).getName()), service.getListEmployees().get(0));
+        } catch (EmployeeNotFound employeeNotFound) {
+            employeeNotFound.printStackTrace();
+        }
+    }
+
+    @Test
+    public void findByNameWithFail() throws EmployeeNotFound {
+        //create a list of employee
+        Assert.assertNotEquals(service.findByName("Fanny"), service.getListEmployees().get(0));
+    }
+
 }
